@@ -49,10 +49,10 @@ export default function sidebar() {
         // Swap these genre strings for whatever fits your app best.
         const [madeForYou, recentlyPlayed, topMixes, recommendedRadio] =
           await Promise.all([
-            getTrendingByGenre("Electronic", 10),
-            getTrendingByGenre("Hip-Hop/Rap", 10),
-            getTrendingByGenre("Pop", 10),
-            getTrendingByGenre("R&B/Soul", 10),
+            getTrendingByGenre("Electronic", 20),
+            getTrendingByGenre("Hip-Hop/Rap", 20),
+            getTrendingByGenre("Pop", 20),
+            getTrendingByGenre("R&B/Soul", 20),
           ]);
 
         if (!isMounted) return;
