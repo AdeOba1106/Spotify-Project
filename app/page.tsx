@@ -3,12 +3,8 @@ import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
 import MusicPlayer from "./components/MusicPlayer";
 
-
 export default function Homepage() {
-
   return (
-
-
     <main className="bg-black fixed h-screen w-screen">
       <Navbar />
 
@@ -16,7 +12,6 @@ export default function Homepage() {
         <Sidebar />
         <MusicPlayer />
       </main>
-
     </main>
   );
 }

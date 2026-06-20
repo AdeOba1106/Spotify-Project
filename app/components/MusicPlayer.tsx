@@ -70,12 +70,17 @@ export default function MusicPlayer() {
           <div className="flex items-center gap-5">
             <button
               onClick={toggleShuffle}
-              className={shuffle ? "text-[#1DB954]" : "text-zinc-400 hover:text-white"}
+              className={
+                shuffle ? "text-[#1DB954]" : "text-zinc-400 hover:text-white"
+              }
             >
               <LuShuffle size={18} />
             </button>
 
-            <button onClick={prevSong} className="text-zinc-400 hover:text-white">
+            <button
+              onClick={prevSong}
+              className="text-zinc-400 hover:text-white"
+            >
               <IoPlaySkipBack size={24} />
             </button>
 
@@ -86,14 +91,19 @@ export default function MusicPlayer() {
               {isPlaying ? <IoMdPause size={20} /> : <IoMdPlay size={20} />}
             </button>
 
-            <button onClick={nextSong} className="text-zinc-400 hover:text-white">
+            <button
+              onClick={nextSong}
+              className="text-zinc-400 hover:text-white"
+            >
               <IoPlaySkipForward size={24} />
             </button>
 
             <button
               onClick={toggleRepeat}
               className={
-                repeat !== "off" ? "relative text-[#1DB954]" : "text-zinc-400 hover:text-white"
+                repeat !== "off"
+                  ? "relative text-[#1DB954]"
+                  : "text-zinc-400 hover:text-white"
               }
             >
               <LuRepeat size={18} />
