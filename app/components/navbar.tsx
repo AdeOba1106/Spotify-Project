@@ -85,14 +85,7 @@ export default function Navbar() {
             <p>Install App</p>
           </div>
 
-          <Image
-            src="/icons8-notification-bell-100.png"
-            alt="Notifications"
-            width={20}
-            height={20}
-            className="hidden cursor-pointer opacity-75 transition hover:scale-110 hover:opacity-100 sm:block"
-          />
-
+        
           <Image
             src="/icons8-friends-100.png"
             alt="Friends"

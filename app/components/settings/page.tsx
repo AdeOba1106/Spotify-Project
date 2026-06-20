@@ -22,21 +22,9 @@ export default function SettingsPage() {
                 title: "Privacy",
                 desc: "Control your privacy settings",
               },
-              {
-                icon: Moon,
-                title: "Appearance",
-                desc: "Dark mode preferences",
-              },
-              {
-                icon: Globe,
-                title: "Language",
-                desc: "Choose your preferred language",
-              },
-              {
-                icon: Smartphone,
-                title: "Devices",
-                desc: "Manage connected devices",
-              },
+           
+            
+           
             ].map((item) => (
               <div
                 key={item.title}

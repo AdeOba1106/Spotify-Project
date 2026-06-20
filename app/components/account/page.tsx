@@ -1,24 +1,18 @@
-"use client"; 
+"use client";
 import Link from "next/link";
-
 import {
   User,
   Mail,
-  Lock,
   CreditCard,
-  Bell,
-  Shield,
-  Music,
   LogOut,
 } from "lucide-react";
 import Navbar from "../navbar";
 
 export default function AccountPage() {
   return (
-
-   
     <main className="min-h-screen bg-[#121212] text-white">
-        <Navbar />
+      <Navbar />
+
       <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10">
@@ -42,45 +36,43 @@ export default function AccountPage() {
               </div>
             </div>
 
+            {/* NAV */}
             <nav className="space-y-2 text-sm">
               {[
-                ["Profile", User], 
-                ["Email & Password", Lock],
-                ["Subscription", CreditCard],
-                ["Notifications", Bell],
-                ["Privacy", Shield],
-                ["Music Preferences", Music],
-              ].map(([label, Icon]: any) => (
-                <button
+                { label: "Profile", icon: User, href: "/components/account" },
+                { label: "Subscription", icon: CreditCard, href: "/components/upgrade" },
+              ].map(({ label, icon: Icon, href }) => (
+                <Link
                   key={label}
-                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-zinc-300 transition hover:bg-white/10 hover:text-white"
+                  href={href}
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-zinc-300 transition hover:bg-white/10 hover:text-white"
                 >
                   <Icon size={18} />
                   {label}
-                </button>
+                </Link>
               ))}
 
-              <button className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-red-400 transition hover:bg-red-500/10">
+              {/* LOGOUT */}
+              <Link
+                href="/login"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-red-400 transition hover:bg-red-500/10"
+              >
                 <LogOut size={18} />
-                <Link href="/login">Log out </Link>
-              </button>
+                Log out
+              </Link>
             </nav>
           </aside>
 
           {/* Content */}
           <div className="space-y-6">
-            {/* Profile Card */}
+            {/* Profile */}
             <section className="rounded-2xl bg-[#181818] p-6">
               <h2 className="text-xl font-bold">Profile</h2>
-              <p className="mt-1 text-sm text-zinc-400">
-                Your public account information.
-              </p>
 
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
                 <div>
                   <label className="text-sm text-zinc-400">Display Name</label>
                   <input
-                    type="text"
                     defaultValue="Adeoye Marvelous"
                     className="mt-2 w-full rounded-xl border border-white/10 bg-[#121212] px-4 py-3 text-sm outline-none focus:border-[#1db954]"
                   />
@@ -89,7 +81,6 @@ export default function AccountPage() {
                 <div>
                   <label className="text-sm text-zinc-400">Username</label>
                   <input
-                    type="text"
                     defaultValue="Obalolu87"
                     className="mt-2 w-full rounded-xl border border-white/10 bg-[#121212] px-4 py-3 text-sm outline-none focus:border-[#1db954]"
                   />
@@ -117,23 +108,20 @@ export default function AccountPage() {
                 </div>
               </div>
 
-              <button className="mt-6 rounded-full bg-[#1db954] px-6 py-3 text-sm font-bold text-black transition hover:scale-105 hover:bg-[#1ed760]">
+              <button className="mt-6 rounded-full bg-[#1db954] px-6 py-3 text-sm font-bold text-black hover:bg-[#1ed760]">
                 Save Profile
               </button>
             </section>
 
             {/* Plan */}
-            <section className="rounded-2xl bg-linear-to-br from-[#1db954] to-[#0f8f3d] p-6 text-black">
+            <section className="rounded-2xl bg-gradient-to-br from-[#1db954] to-[#0f8f3d] p-6 text-black">
               <h2 className="text-xl font-bold">Premium Individual</h2>
-              <p className="mt-2 max-w-xl text-sm font-medium">
-                Enjoy ad-free music, offline listening, and unlimited skips.
-              </p>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <button className="rounded-full bg-black px-6 py-3 text-sm font-bold text-white transition hover:scale-105">
+              <div className="mt-6 flex gap-3">
+                <button className="rounded-full bg-black px-6 py-3 text-sm font-bold text-white">
                   Manage Plan
                 </button>
-                <button className="rounded-full border border-black px-6 py-3 text-sm font-bold transition hover:bg-black hover:text-white">
+                <button className="rounded-full border border-black px-6 py-3 text-sm font-bold">
                   View Billing
                 </button>
               </div>
@@ -155,10 +143,7 @@ export default function AccountPage() {
                   >
                     <p className="text-sm text-zinc-300">{item}</p>
 
-                    <label className="relative inline-flex cursor-pointer items-center">
-                      <input type="checkbox" className="peer sr-only" />
-                      <div className="h-6 w-11 rounded-full bg-zinc-700 after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition peer-checked:bg-[#1db954] peer-checked:after:translate-x-5" />
-                    </label>
+                    <input type="checkbox" />
                   </div>
                 ))}
               </div>
