@@ -19,68 +19,62 @@ type Song = {
 type PlayerContextType = {
   currentSong: Song | null;
   isPlaying: boolean;
-
   playSong: (song: Song, index?: number, list?: Song[]) => void;
   togglePlay: () => void;
-
   nextSong: () => void;
   prevSong: () => void;
-
   shuffle: boolean;
   repeat: "off" | "all" | "one";
-
   toggleShuffle: () => void;
   toggleRepeat: () => void;
-
   currentTime: number;
   duration: number;
   seek: (time: number) => void;
-
   volume: number;
   setVolume: (v: number) => void;
-
   stopPlayer: () => void;
 };
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
 
-export const PlayerProvider = ({ children }: any) => {
+export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const soundRef = useRef<Howl | null>(null);
 
   const [queue, setQueue] = useState<Song[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState<"off" | "all" | "one">("off");
-
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-
   const [volume, setVolumeState] = useState(100);
 
   const stopPlayer = () => {
-  if (soundRef.current) {
-    soundRef.current.stop();
-  }
-
-  setIsPlaying(false);
-  setCurrentSong(null);
-  setCurrentTime(0);
-  setDuration(0);
-};
-
-  // 🎵 PLAY SONG
-  const playSong = (song: Song, index = 0, list: Song[] = []) => {
-    setQueue(list);
-    setCurrentIndex(index);
-    setCurrentSong(song);
-
     if (soundRef.current) {
       soundRef.current.stop();
+      soundRef.current.unload();
+      soundRef.current = null;
     }
+
+    setIsPlaying(false);
+    setCurrentSong(null);
+    setCurrentTime(0);
+    setDuration(0);
+    setQueue([]);
+    setCurrentIndex(0);
+  };
+
+  const playSong = (song: Song, index = 0, list: Song[] = []) => {
+    if (soundRef.current) {
+      soundRef.current.stop();
+      soundRef.current.unload();
+    }
+
+    setQueue(list.length ? list : [song]);
+    setCurrentIndex(index);
+    setCurrentSong(song);
+    setCurrentTime(0);
 
     const sound = new Howl({
       src: [song.src],
@@ -92,6 +86,12 @@ export const PlayerProvider = ({ children }: any) => {
       },
 
       onend: () => {
+        if (repeat === "one") {
+          sound.seek(0);
+          sound.play();
+          return;
+        }
+
         nextSong();
       },
     });
@@ -101,7 +101,6 @@ export const PlayerProvider = ({ children }: any) => {
     setIsPlaying(true);
   };
 
-  // ⏯ TOGGLE PLAY
   const togglePlay = () => {
     if (!soundRef.current) return;
 
@@ -114,28 +113,33 @@ export const PlayerProvider = ({ children }: any) => {
     }
   };
 
-  // ⏭ NEXT
   const nextSong = () => {
-    if (!queue.length) return;
+    if (!queue.length) {
+      stopPlayer();
+      return;
+    }
 
-    let newIndex;
+    if (repeat === "one" && currentSong) {
+      playSong(currentSong, currentIndex, queue);
+      return;
+    }
+
+    let newIndex = currentIndex;
 
     if (shuffle) {
       newIndex = Math.floor(Math.random() * queue.length);
+    } else if (currentIndex < queue.length - 1) {
+      newIndex = currentIndex + 1;
+    } else if (repeat === "all") {
+      newIndex = 0;
     } else {
-      newIndex =
-        currentIndex < queue.length - 1
-          ? currentIndex + 1
-          : repeat === "all"
-          ? 0
-          : currentIndex;
+      stopPlayer();
+      return;
     }
 
-    setCurrentIndex(newIndex);
     playSong(queue[newIndex], newIndex, queue);
   };
 
-  // ⏮ PREV
   const prevSong = () => {
     if (!queue.length) return;
 
@@ -146,46 +150,51 @@ export const PlayerProvider = ({ children }: any) => {
         ? queue.length - 1
         : 0;
 
-    setCurrentIndex(newIndex);
     playSong(queue[newIndex], newIndex, queue);
   };
 
-  // 🔀 SHUFFLE
   const toggleShuffle = () => {
     setShuffle((prev) => !prev);
   };
 
-  // 🔁 REPEAT
   const toggleRepeat = () => {
     setRepeat((prev) =>
       prev === "off" ? "all" : prev === "all" ? "one" : "off"
     );
   };
 
-  // ⏩ SEEK
   const seek = (time: number) => {
     soundRef.current?.seek(time);
     setCurrentTime(time);
   };
 
-  // 🔊 VOLUME
   const setVolume = (v: number) => {
     setVolumeState(v);
     soundRef.current?.volume(v / 100);
   };
 
-  // ⏱ TRACK TIME
   useEffect(() => {
-    let interval: any;
+    let interval: ReturnType<typeof setInterval>;
 
     if (isPlaying && soundRef.current) {
       interval = setInterval(() => {
-        setCurrentTime(soundRef.current?.seek() as number);
+        const time = soundRef.current?.seek();
+
+        if (typeof time === "number") {
+          setCurrentTime(time);
+        }
       }, 500);
     }
 
     return () => clearInterval(interval);
   }, [isPlaying]);
+
+  useEffect(() => {
+    return () => {
+      soundRef.current?.stop();
+      soundRef.current?.unload();
+    };
+  }, []);
 
   return (
     <PlayerContext.Provider
@@ -194,19 +203,15 @@ export const PlayerProvider = ({ children }: any) => {
         isPlaying,
         playSong,
         togglePlay,
-
         nextSong,
         prevSong,
-
         shuffle,
         repeat,
         toggleShuffle,
         toggleRepeat,
-
         currentTime,
         duration,
         seek,
-
         volume,
         setVolume,
         stopPlayer,
@@ -219,6 +224,10 @@ export const PlayerProvider = ({ children }: any) => {
 
 export const usePlayer = () => {
   const context = useContext(PlayerContext);
-  if (!context) throw new Error("usePlayer must be used inside PlayerProvider");
+
+  if (!context) {
+    throw new Error("usePlayer must be used inside PlayerProvider");
+  }
+
   return context;
 };

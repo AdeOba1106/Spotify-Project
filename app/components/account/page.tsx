@@ -1,4 +1,5 @@
 "use client"; 
+import Link from "next/link";
 
 import {
   User,
@@ -10,10 +11,14 @@ import {
   Music,
   LogOut,
 } from "lucide-react";
+import Navbar from "../navbar";
 
 export default function AccountPage() {
   return (
+
+   
     <main className="min-h-screen bg-[#121212] text-white">
+        <Navbar />
       <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10">
@@ -32,14 +37,14 @@ export default function AccountPage() {
               </div>
 
               <div>
-                <h2 className="font-semibold">Temitope</h2>
+                <h2 className="font-semibold">MARVEL-Tech</h2>
                 <p className="text-sm text-zinc-400">Premium User</p>
               </div>
             </div>
 
             <nav className="space-y-2 text-sm">
               {[
-                ["Profile", User],
+                ["Profile", User], 
                 ["Email & Password", Lock],
                 ["Subscription", CreditCard],
                 ["Notifications", Bell],
@@ -57,7 +62,7 @@ export default function AccountPage() {
 
               <button className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-red-400 transition hover:bg-red-500/10">
                 <LogOut size={18} />
-                Log out
+                <Link href="/login">Log out </Link>
               </button>
             </nav>
           </aside>
@@ -76,7 +81,7 @@ export default function AccountPage() {
                   <label className="text-sm text-zinc-400">Display Name</label>
                   <input
                     type="text"
-                    defaultValue="Temitope Eniola"
+                    defaultValue="Adeoye Marvelous"
                     className="mt-2 w-full rounded-xl border border-white/10 bg-[#121212] px-4 py-3 text-sm outline-none focus:border-[#1db954]"
                   />
                 </div>
@@ -85,7 +90,7 @@ export default function AccountPage() {
                   <label className="text-sm text-zinc-400">Username</label>
                   <input
                     type="text"
-                    defaultValue="temitope112"
+                    defaultValue="Obalolu87"
                     className="mt-2 w-full rounded-xl border border-white/10 bg-[#121212] px-4 py-3 text-sm outline-none focus:border-[#1db954]"
                   />
                 </div>
@@ -96,7 +101,7 @@ export default function AccountPage() {
                     <Mail size={18} className="text-zinc-400" />
                     <input
                       type="email"
-                      defaultValue="temitope@email.com"
+                      defaultValue="adeoyemarvelous15@email.com"
                       className="w-full bg-transparent text-sm outline-none"
                     />
                   </div>
@@ -118,7 +123,7 @@ export default function AccountPage() {
             </section>
 
             {/* Plan */}
-            <section className="rounded-2xl bg-gradient-to-br from-[#1db954] to-[#0f8f3d] p-6 text-black">
+            <section className="rounded-2xl bg-linear-to-br from-[#1db954] to-[#0f8f3d] p-6 text-black">
               <h2 className="text-xl font-bold">Premium Individual</h2>
               <p className="mt-2 max-w-xl text-sm font-medium">
                 Enjoy ad-free music, offline listening, and unlimited skips.

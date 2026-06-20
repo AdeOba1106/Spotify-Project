@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,11 +17,13 @@ import {
   Plus,
   Mic2,
   Album,
+  X,
 } from "lucide-react";
 
 export default function AdminDashboard() {
   const pathname = usePathname();
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   const stats = [
     { title: "Total Songs", value: "12,584", icon: <Music size={24} /> },
@@ -35,53 +38,47 @@ export default function AdminDashboard() {
     { id: 3, title: "Unavailable", artist: "Davido", plays: "500K", status: "Active" },
   ];
 
- const menu = [
-  { name: "Dashboard", href: "/admins", icon: <Music size={18} /> },
-  { name: "Songs", href: "/admins/songs", icon: <Mic2 size={18} /> },
-  { name: "Artists", href: "/admins/artists", icon: <Users size={18} /> },
-  { name: "Albums", href: "/admins/albums", icon: <Album size={18} /> },
-  { name: "Playlists", href: "/admins/playlists", icon: <ListMusic size={18} /> },
-  { name: "Users", href: "/admins/users", icon: <Users size={18} /> },
-  { name: "Analytics", href: "/admins/analytics", icon: <TrendingUp size={18} /> },
-  { name: "Settings", href: "/admins/settings", icon: <Settings size={18} /> },
-];
-
+  const menu = [
+    { name: "Dashboard", href: "/admins", icon: <Music size={18} /> },
+    { name: "Songs", href: "/admins/songs", icon: <Mic2 size={18} /> },
+    { name: "Artists", href: "/admins/artists", icon: <Users size={18} /> },
+    { name: "Albums", href: "/admins/albums", icon: <Album size={18} /> },
+    { name: "Playlists", href: "/admins/playlists", icon: <ListMusic size={18} /> },
+    { name: "Users", href: "/admins/users", icon: <Users size={18} /> },
+    { name: "Analytics", href: "/admins/analytics", icon: <TrendingUp size={18} /> },
+    { name: "Settings", href: "/admins/settings", icon: <Settings size={18} /> },
+  ];
 
   return (
     <div className="min-h-screen bg-[#121212] text-white flex">
-
       {/* SIDEBAR */}
       <aside className="w-64 h-screen sticky top-0 bg-[#181818] border-r border-zinc-800 p-6 flex flex-col">
-
-        {/* LOGO */}
         <div className="flex items-center gap-2 mb-10">
           <div className="w-9 h-9 bg-[#1DB954] rounded-lg flex items-center justify-center">
-             <Image
-                        src="/icons8-spotify-96.png"
-                        alt="Spotify"
-                        width={40}
-                        height={40}
-                        className=" h-auto w-8 cursor-pointer"
-                      />
+            <Image
+              src="/icons8-spotify-96.png"
+              alt="Spotify"
+              width={40}
+              height={40}
+              className="h-auto w-8 cursor-pointer"
+            />
           </div>
           <h1 className="text-xl font-bold">Spotify Admin</h1>
         </div>
 
-        {/* MENU */}
         <nav className="space-y-2 flex-1">
           {menu.map((item) => {
-           const isActive = pathname === item.href;
+            const isActive = pathname === item.href;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 p-3 rounded-xl transition
-                  ${
-                    isActive
-                      ? "bg-[#1DB954] text-black font-semibold"
-                      : "text-zinc-300 hover:bg-zinc-800"
-                  }`}
+                className={`flex items-center gap-3 p-3 rounded-xl transition ${
+                  isActive
+                    ? "bg-[#1DB954] text-black font-semibold"
+                    : "text-zinc-300 hover:bg-zinc-800"
+                }`}
               >
                 {item.icon}
                 {item.name}
@@ -90,7 +87,6 @@ export default function AdminDashboard() {
           })}
         </nav>
 
-        {/* LOGOUT */}
         <button
           onClick={() => router.push("/login")}
           className="flex items-center gap-2 text-red-400 hover:text-red-500 mt-6"
@@ -102,10 +98,7 @@ export default function AdminDashboard() {
 
       {/* MAIN */}
       <main className="flex-1 p-8">
-
-        {/* TOP BAR */}
         <div className="flex justify-between items-center mb-8">
-
           <div className="flex items-center bg-[#181818] px-4 py-3 rounded-xl w-[400px]">
             <Search size={18} />
             <input
@@ -116,7 +109,10 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="bg-[#1DB954] hover:bg-green-500 px-4 py-2 rounded-xl flex items-center gap-2">
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-[#1DB954] hover:bg-green-500 px-4 py-2 rounded-xl flex items-center gap-2 text-black font-semibold"
+            >
               <Plus size={18} />
               Add Song
             </button>
@@ -131,7 +127,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* STATS */}
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6 mb-8">
           {stats.map((item) => (
             <div
@@ -149,9 +144,7 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* ANALYTICS */}
         <div className="grid lg:grid-cols-3 gap-6 mb-8">
-
           <div className="lg:col-span-2 bg-[#181818] rounded-2xl p-6 border border-zinc-800">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="text-[#1DB954]" />
@@ -173,20 +166,22 @@ export default function AdminDashboard() {
             <h2 className="text-xl font-semibold mb-5">Top Artists</h2>
 
             <div className="space-y-4">
-              {["Burna Boy", "Rema", "Davido", "Asake", "Wizkid"].map((artist, i) => (
-                <div key={artist} className="flex justify-between">
-                  <span>{i + 1}. {artist}</span>
-                  <span className="text-[#1DB954]">
-                    {(2.5 - i * 0.3).toFixed(1)}M
-                  </span>
-                </div>
-              ))}
+              {["Burna Boy", "Rema", "Davido", "Asake", "Wizkid"].map(
+                (artist, i) => (
+                  <div key={artist} className="flex justify-between">
+                    <span>
+                      {i + 1}. {artist}
+                    </span>
+                    <span className="text-[#1DB954]">
+                      {(2.5 - i * 0.3).toFixed(1)}M
+                    </span>
+                  </div>
+                )
+              )}
             </div>
           </div>
-
         </div>
 
-        {/* SONGS */}
         <div className="bg-[#181818] rounded-2xl border border-zinc-800 p-6">
           <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
             <Music className="text-[#1DB954]" />
@@ -221,10 +216,75 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
-
         </div>
-
       </main>
+
+      {/* MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-[#181818] border border-zinc-800 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Add New Song</h2>
+
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-zinc-400 hover:text-white"
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <form className="space-y-4">
+              <input
+                type="text"
+                placeholder="Song Title"
+                className="w-full bg-[#282828] p-3 rounded-xl outline-none focus:ring-2 focus:ring-[#1DB954]"
+              />
+
+              <input
+                type="text"
+                placeholder="Artist Name"
+                className="w-full bg-[#282828] p-3 rounded-xl outline-none focus:ring-2 focus:ring-[#1DB954]"
+              />
+
+              <input
+                type="text"
+                placeholder="Album Name"
+                className="w-full bg-[#282828] p-3 rounded-xl outline-none focus:ring-2 focus:ring-[#1DB954]"
+              />
+
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full bg-[#282828] p-3 rounded-xl"
+              />
+
+              <input
+                type="file"
+                accept="audio/*"
+                className="w-full bg-[#282828] p-3 rounded-xl"
+              />
+
+              <div className="flex justify-end gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-5 py-2 rounded-xl bg-zinc-700 hover:bg-zinc-600"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-[#1DB954] text-black font-semibold hover:bg-green-500"
+                >
+                  Upload Song
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
