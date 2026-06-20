@@ -11,7 +11,7 @@ export default function Page() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
-
+// the states 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
