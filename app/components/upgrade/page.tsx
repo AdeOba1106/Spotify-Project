@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import Navbar from "../navbar";
+import Navbar~ from "../navbar";
 
 export default function PremiumPage() {
   const features = [
