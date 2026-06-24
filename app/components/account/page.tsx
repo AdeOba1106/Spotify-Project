@@ -18,7 +18,7 @@ export default function AccountPage() {
         <div className="mb-10">
           <h1 className="text-3xl font-bold sm:text-4xl">Account</h1>
           <p className="mt-2 text-sm text-zinc-400">
-            Manage your Spotify account, plan, security and preferences.
+            Manage your AudioTunez account, plan, security and preferences.
           </p>
         </div>
 
